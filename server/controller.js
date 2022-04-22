@@ -37,12 +37,12 @@ module.exports = {
 
     getCities: (req, res) => {
         
-        const {country_id} = req.body
+        // const {country_id} = req.body
 
         sequelize.query(`
         select r.country_id, c.city_id
         from countries r join cities c on r.country_id = c.country_id 
-        where c.country_id = ${country_id}
+        where c.country_id = country_id
         order by country
         `)
         .then(dbRes => res.status(200).send(dbRes[0]))
