@@ -25,36 +25,35 @@ module.exports = {
     }, 
 
     createCity: (req, res) => {
-        const {name, rating, country_id} = req.body;
+        const {name, rating, countryId} = req.body
 
         sequelize.query(`
-        insert into cities(name, rating, country_id)
-        values (${name}, ${rating}, ${country_id})
+        insert into cities (name, rating, country_id)
+        values ('${name}', ${rating}, ${countryId});
         `)
         .then(dbRes => res.status(200).send(dbRes[0]))
         .catch(err => console.log('error creating city', err))
     },
 
     getCities: (req, res) => {
-        
-        // const {country_id} = req.body
 
         sequelize.query(`
-        select r.country_id, c.city_id
-        from countries r join cities c on r.country_id = c.country_id 
-        where c.country_id = country_id
-        order by country
+        select c.rating, r.country_id r.name AS country, c.city_id, c.name AS city
+        from cities c
+        join countries r
+        on r.country_id = c.country_id
+        order by c.rating DESC
         `)
         .then(dbRes => res.status(200).send(dbRes[0]))
         .catch(err => console.log('error getting city', err))
     },
 
     deleteCity: (req, res) => {
-        const {city_id} = req.params;
+        const {cityId} = req.params
         
         sequelize.query(`
             delete from cities
-            where city_id = ${city_id}
+            where city_id = ${cityId}
         `)
         .then(dbRes => res.status(200).send(dbRes[0]))
         .catch(err => console.log('error deleting city', err))
